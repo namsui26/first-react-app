@@ -56,17 +56,17 @@ const GlobalStyle = createGlobalStyle`
   ${reset}
   
   /* 전역 스타일링 작성*/
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f8f8f8;
-    max-width: 800px;
-    margin: 50px auto;
-    padding: 0 20px;
-  }
+  // body {
+  //   font-family: Arial, sans-serif;
+  //   background-color: #f8f8f8;
+  //   max-width: 800px;
+  //   margin: 50px auto;
+  //   padding: 0 20px;
+  // }
 
-  label{
-    background-color: skyblue;
-  }
+  // label{
+  //   background-color: skyblue;
+  // }
 `;
 
 export default GlobalStyle;

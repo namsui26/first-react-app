@@ -9,7 +9,6 @@ function Home({ expenses, setExpenses }) {
 
   return (
     <div>
-      <h2>메인 페이지</h2>
       <ExpenseForm setExpenses={setExpenses} />
       <MonthSelector selectedMonth={selectedMonth} setSelectedMonth={setSelectedMonth} />
       <ExpenseList expenses={expenses} selectedMonth={selectedMonth} />

@@ -18,10 +18,12 @@ function App() {
     <>
     <GlobalStyle />
     <Router>
+    {/* <ExpenseProvider> */}
       <Routes>
         <Route path="/" element={<Home expenses={expenses} setExpenses={setExpenses} />} />
         <Route path="/detail/:id" element={<Detail expenses={expenses} setExpenses={setExpenses} />} />
       </Routes>
+      {/* </ExpenseProvider> */}
     </Router>
     </>
     
