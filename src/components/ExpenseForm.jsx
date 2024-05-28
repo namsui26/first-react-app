@@ -20,7 +20,7 @@ function ExpenseForm({ setExpenses }) {
       alert('올바른 날짜 형식(YYYY-MM-DD)으로 입력해주세요.');
       return;
     }
-    
+
     // 지출 추가하기
     setExpenses(prevExpenses => [...prevExpenses, expense]);
     // 폼 초기화
@@ -33,7 +33,7 @@ function ExpenseForm({ setExpenses }) {
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="date">날짜</label>
-          <input type="text" id="date" name="date" placeholder="YYYY-MM-DD" required />
+          <input type="date" id="date" name="date" placeholder="YYYY-MM-DD" required />
         </div>
         <div>
           <label htmlFor="item">항목</label>
