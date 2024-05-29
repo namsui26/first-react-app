@@ -1,13 +1,14 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
-import { useExpenseContext } from '../context/ExpenseContext';
+import { fetchExpenses } from '../redux/slices/expenseSlice'; // RTK 적용
 
 const ListContainer = styled.div`
-background-color: skyblue;
-border-radius: 10px;
-max-width: 1000px;
-margin: 20px auto;
+  background-color: skyblue;
+  border-radius: 10px;
+  max-width: 1000px;
+  margin: 20px auto;
 `;
 
 const ListTitle = styled.h2`
@@ -32,27 +33,25 @@ const ExpenseDetail = styled.div`
   margin-bottom: 5px;
 `;
 
-const Show = styled.div`
-  max-width: 1000px;
-  margin: 20px auto;
-`;
-
-
 function ExpenseList({ selectedMonth }) {
   const navigate = useNavigate();
-  const { expenses } = useExpenseContext();// useExpenseContext로 expenses 가져오기
+  const dispatch = useDispatch();
+  const expenses = useSelector(state => state.expense.expenses);
+
+  useEffect(() => {
+    // fetchExpenses 액션을 dispatch하여 비동기로 지출 데이터를 가져옵니다.
+    dispatch(fetchExpenses());
+  }, [dispatch]);
 
   if (!selectedMonth) {
-    return <Show>월을 선택해주세요.</Show>;
+    return <div>월을 선택해주세요.</div>;
   }
 
-  // 선택된 월에 해당하는 지출 리스트 필터링 함수
   const filteredExpenses = expenses.filter(expense => {
-    const expenseMonth = expense.date.split('-')[1]; // 지출 날짜에서 월 부분 추출
+    const expenseMonth = expense.date.split('-')[1];
     return expenseMonth === selectedMonth.padStart(2, '0');
   });
 
-  // 텍스트 자르기 함수
   const truncateText = (text, maxLength) => {
     if (text.length > maxLength) {
       return text.slice(0, maxLength) + '...';
@@ -60,12 +59,21 @@ function ExpenseList({ selectedMonth }) {
     return text;
   };
 
+  const handleItemClick = (id) => {
+    const expense = expenses.find(expense => expense.id === id);
+    if (expense) {
+      navigate(`/detail/${id}`);
+    } else {
+      alert('지출을 찾을 수 없습니다.');
+    }
+  };
+
   return (
     <ListContainer>
       <ListTitle>지출 리스트</ListTitle>
       <ul>
         {filteredExpenses.map(expense => (
-          <ExpenseItem key={expense.id} onClick={() => navigate(`/detail/${expense.id}`)}>
+          <ExpenseItem key={expense.id} onClick={() => handleItemClick(expense.id)}>
             <ExpenseDetail>날짜: {expense.date}</ExpenseDetail>
             <ExpenseDetail>지출 항목: {truncateText(expense.item, 10)}</ExpenseDetail>
             <ExpenseDetail>금액: {expense.amount}</ExpenseDetail>
@@ -78,5 +86,4 @@ function ExpenseList({ selectedMonth }) {
 }
 
 export default ExpenseList;
-
 

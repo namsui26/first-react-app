@@ -1,5 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useDispatch } from 'react-redux'; // useDispatch 사용
+import { addExpense } from '../redux/slices/expenseSlice';
 import { v4 as uuidv4 } from 'uuid';
 
 const FormContainer = styled.div`
@@ -50,29 +52,37 @@ const Button = styled.button`
   }
 `;
 
-function ExpenseForm({ setExpenses }) {
+function ExpenseForm() {
+  const dispatch = useDispatch(); // useDispatch 사용
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    const id = uuidv4(); // 새로운 지출을 위한 고유한 id 생성
-    // 입력한 지출 데이터
-    const expense = {
-      id: id,
-      date: e.target.date.value,
-      item: e.target.item.value,
-      amount: parseFloat(e.target.amount.value),
-      description: e.target.description.value
-    };
-
-    // 날짜 형식 확인
+    const id = uuidv4();
+    const date = e.target.date.value;
+    const item = e.target.item.value;
+    const amount = parseFloat(e.target.amount.value);
+    const description = e.target.description.value;
+  
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
-    if (!dateRegex.test(expense.date)) {
+    if (!dateRegex.test(date)) {
       alert('올바른 날짜 형식(YYYY-MM-DD)으로 입력해주세요.');
       return;
     }
-
-    // 지출 추가하기
-    setExpenses(prevExpenses => [...prevExpenses, expense]);
-    // 폼 초기화
+  
+    if (isNaN(amount) || amount <= 0) {
+      alert('올바른 금액을 입력해주세요.');
+      return;
+    }
+  
+    const expense = {
+      id: id,
+      date: date,
+      item: item,
+      amount: amount,
+      description: description
+    };
+  
+    dispatch(addExpense(expense));
     e.target.reset();
   };
 
@@ -102,5 +112,3 @@ function ExpenseForm({ setExpenses }) {
 }
 
 export default ExpenseForm;
-
-
