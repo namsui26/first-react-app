@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useExpenseContext } from '../context/ExpenseContext';
 
 const ListContainer = styled.div`
 background-color: skyblue;
@@ -36,8 +37,10 @@ const Show = styled.div`
   margin: 20px auto;
 `;
 
-function ExpenseList({ expenses, selectedMonth }) {
+
+function ExpenseList({ selectedMonth }) {
   const navigate = useNavigate();
+  const { expenses } = useExpenseContext();// useExpenseContext로 expenses 가져오기
 
   if (!selectedMonth) {
     return <Show>월을 선택해주세요.</Show>;
