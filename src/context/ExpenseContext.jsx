@@ -1,14 +1,17 @@
-import React, { createContext, useContext, useState } from 'react';
+// src/ExpenseContext.jsx
+import React, { createContext, useContext, useState, useEffect } from 'react';
+import { fakeData } from '../data/fakeData'; // fakeData.js 파일에서 fakeData를 가져옵니다.
 
-// Context 생성
 const ExpenseContext = createContext({});
 
-// Context를 쉽게 사용할 수 있도록 커스텀 훅 생성
 export const useExpenseContext = () => useContext(ExpenseContext);
 
-// Context Provider 컴포넌트
 export const ExpenseProvider = ({ children }) => {
   const [expenses, setExpenses] = useState([]);
+
+  useEffect(() => {
+    setExpenses(fakeData); // 컴포넌트가 마운트될 때 fakeData를 설정합니다.
+  }, []);
 
   return (
     <ExpenseContext.Provider value={{ expenses, setExpenses }}>
@@ -16,3 +19,5 @@ export const ExpenseProvider = ({ children }) => {
     </ExpenseContext.Provider>
   );
 };
+
+

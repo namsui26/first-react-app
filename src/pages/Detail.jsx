@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
+import { useExpenseContext } from '../context/ExpenseContext';
 
 const Container = styled.div`
   max-width: 600px;
@@ -50,9 +51,10 @@ const SecondaryButton = styled(Button)`
   background-color: #6c757d;
 `;
 
-function Detail({ expenses, setExpenses }) {
+function Detail() {
   const { id } = useParams(); // URL에서 id 파라미터를 가져옴
   const navigate = useNavigate();
+  const { expenses, setExpenses } = useExpenseContext(); // useExpenseContext로 expenses와 setExpenses 가져오기
   const selectedExpense = expenses.find(expense => expense.id === id); // id와 일치하는 지출을 찾음
 
   const [isEditing, setIsEditing] = useState(false);
