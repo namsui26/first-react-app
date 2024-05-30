@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-// import { useExpenseContext } from '../context/ExpenseContext';
+// Detail.jsx
+
+import React, { useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
+import styled from "styled-components";
+import { updateExpense, deleteExpense } from "../redux/slices/expenseSlice";
 
 const Container = styled.div`
   max-width: 600px;
@@ -38,7 +41,7 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background-color: ${props => (props.primary ? '#007bff' : '#dc3545')};
+  background-color: ${(props) => (props.primary ? "#007bff" : "#dc3545")};
   color: white;
   font-size: 16px;
 
@@ -54,8 +57,10 @@ const SecondaryButton = styled(Button)`
 function Detail() {
   const { id } = useParams(); // URL에서 id 파라미터를 가져옴
   const navigate = useNavigate();
-  const { expenses, setExpenses } = useExpenseContext(); // useExpenseContext로 expenses와 setExpenses 가져오기
-  const selectedExpense = expenses.find(expense => expense.id === id); // id와 일치하는 지출을 찾음
+  const dispatch = useDispatch();
+  const selectedExpense = useSelector((state) =>
+    state.expense.expenses.find((expense) => expense.id === id)
+  );
 
   const [isEditing, setIsEditing] = useState(false);
   const [editedExpense, setEditedExpense] = useState({ ...selectedExpense });
@@ -65,13 +70,10 @@ function Detail() {
   }
 
   const handleDelete = () => {
-    const shouldDelete = window.confirm('정말로 삭제하시겠습니까?'); // 경고창 표시
+    const shouldDelete = window.confirm("정말로 삭제하시겠습니까?"); // 경고창 표시
     if (shouldDelete) {
-      // 삭제할 지출 데이터를 제외한 전체 지출 데이터 배열 생성
-      const updatedExpenses = expenses.filter(expense => expense.id !== id);
-      setExpenses(updatedExpenses);
-      // 상세 페이지를 나가고 홈 페이지로 이동
-      navigate('/');
+      dispatch(deleteExpense(id));
+      navigate("/");
     }
   };
 
@@ -79,22 +81,18 @@ function Detail() {
     setIsEditing(true);
   };
 
-  const handleChange = e => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditedExpense(prev => ({
+    setEditedExpense((prev) => ({
       ...prev,
       [name]: value,
     }));
   };
 
   const handleSave = () => {
-    // 수정된 지출 데이터를 반영한 전체 지출 데이터 배열 생성
-    const updatedExpenses = expenses.map(expense =>
-      expense.id === id ? editedExpense : expense
-    );
-    setExpenses(updatedExpenses);
+    dispatch(updateExpense({ id, updatedExpense: editedExpense }));
     setIsEditing(false);
-    navigate('/'); // 메인페이지로 이동
+    navigate("/");
   };
 
   const handleBack = () => {
@@ -165,6 +163,7 @@ function Detail() {
           수정
         </Button>
       )}
+
       <Button onClick={handleDelete}>삭제</Button>
       <SecondaryButton onClick={handleBack}>뒤로가기</SecondaryButton>
     </Container>
